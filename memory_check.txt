@@ -1,7 +1,7 @@
 #!/bin/bash
 TOTAL_MEMUSED=$( free | grep Mem: | awk '{ printf "%.0f", $3/$2 * 100 }' )
 
-feed="/root/scripts/smp4.sh"
+feed="/root/scripts/memory_check_main.sh"
 
 $feed $1 $2 $3 $4 $5 $6
 
