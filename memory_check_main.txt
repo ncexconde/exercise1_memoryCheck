@@ -1,0 +1,56 @@
+#!/bin/bash
+
+TOTAL_TOTMEM=$( free | grep Mem: | awk '{ print $2 }' )
+TOTAL_USED=$( free | grep Mem: | awk '{ print $3 }' )
+TOTAL_FREE=$( free | grep Mem: | awk '{ print $4 }' )
+TOTAL_MEMUSED=$( free | grep Mem: | awk '{ printf "%.0f", $3/$2 * 100 }' )
+PETSA=$( date +'%Y%m%d %H-%M' )
+
+while getopts ":c:w:e:" opt; do
+   case $opt in
+    e)
+      e=$OPTARG
+     echo $message | mail -s "$PETSA memory check status" $OPTARG
+     exit 3
+     ;;
+
+     w)
+        w=$OPTARG
+     if [ "$c" != "" ]; then
+       if [ "$TOTAL_MEMUSED" -ge "$OPTARG" ] && [ "$TOTAL_MEMUSED" -lt $c ]; then
+        message=$( echo "Memory is at $TOTAL_MEMUSED % . CRITICAL THreshold" )
+        exit 1
+        elif [ "$TOTAL_MEMUSED" -lt $OPTARG ]; then
+        message=$( echo "Memory is at $TOTAL_MEMUSED % . NORMAL THreshold" )
+        exit 0
+     fi
+     else
+     echo ""
+fi
+    ;;
+
+
+    c)
+     c=$OPTARG
+        if [ "$TOTAL_MEMUSED" -ge "$OPTARG" ]; then
+        message=$( echo "Memory is at $TOTAL_MEMUSED % . CRITICAL THreshold" )
+        top_process=$( ps -eo pmem,pid,user,args | sort -k 1 -r | head -10 > top_mem.txt )
+        cat top_mem.txt | mail -s "$PETSA memory check - CRITICAL" $e
+        exit 2
+
+
+    fi
+      ;;
+
+    *)
+
+         echo "Please fill in below parameters:
+-c is for critical threshold
+-w is for warning threshold
+-e is for email recipient
+SAMPLE Syntax:
+memory_check -c 90 -w 60 -e weng@apc.com"
+
+exit 3
+esac
+done
