@@ -3,7 +3,7 @@ The two attached text files are my script for the exercise 1.
 For Script memory_check:
   this is my script to manually code the exit in my main script. It calls my main script inside.
   
-For Script smp4.txt:
+For Script memory_check_main.txt:
   This is my main script, where it performs items 1 - 3 in exercise 1.
   
 
