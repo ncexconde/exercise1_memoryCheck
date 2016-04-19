@@ -5,7 +5,7 @@ TOTAL_USED=$( free | grep Mem: | awk '{ print $3 }' )
 TOTAL_FREE=$( free | grep Mem: | awk '{ print $4 }' )
 TOTAL_MEMUSED=$( free | grep Mem: | awk '{ printf "%.0f", $3/$2 * 100 }' )
 PETSA=$( date +'%Y%m%d %H-%M' )
-
+flag=
 while getopts ":c:w:e:" opt; do
    case $opt in
     e)
@@ -55,9 +55,12 @@ exit 3
 esac
 done
 
+if [ -z "$flag" ];
+then
 echo "Please fill in below parameters:
 -c is for critical threshold
 -w is for warning threshold
 -e is for email recipient
 SAMPLE Syntax:
 memory_check -c 90 -w 60 -e weng@apc.com"
+fi
